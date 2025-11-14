@@ -1,9 +1,44 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useForm } from "../hooks/useForm.js";
 
 export const RegisterPage = () => {
   // TODO: Integrar lógica de registro aquí
+  const navigate = useNavigate();
+
+  
   // TODO: Implementar useForm para el manejo del formulario
+  const { formState, handleChange, handleReset } = useForm({
+    username: "",
+    email: "",
+    password: "",
+    name: "",
+    lastname: "",
+  });
+  
   // TODO: Implementar función handleSubmit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:3000/api/register", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(formState),
+      });
+
+      if (response.ok) {
+        navigate("/login");
+      } else {
+        alert("Credenciales incorrectas");
+        handleReset();
+      }
+    } catch (e) {
+      console.error("Error: ", e.message);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8">
