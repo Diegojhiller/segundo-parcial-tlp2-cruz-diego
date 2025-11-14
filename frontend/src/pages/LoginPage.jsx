@@ -2,23 +2,20 @@ import { Link } from "react-router";
 import { useForm } from "../hooks/useForm";
 import { useNavigate } from "react-router";
 
-
 export const LoginPage = () => {
-  // TODO: Implementar useForm para el manejo del formulario
   const navigate = useNavigate();
   const { formState, handleChange, handleReset } = useForm({
     username: "",
     password: "",
   });
-  // TODO: Integrar lógica de autenticación aquí
 
-  // TODO: Implementar función handleSubmit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const res = await fetch("http://localhost:3000/api/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-type": "application/json",
         },
@@ -51,7 +48,7 @@ export const LoginPage = () => {
           </p>
         </div>
 
-        <form onSubmit={(event) => {}}>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               htmlFor="username"
@@ -63,6 +60,7 @@ export const LoginPage = () => {
               type="text"
               id="username"
               name="username"
+              onChange={handleChange}
               placeholder="Ingresa tu usuario"
               className="w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -80,6 +78,7 @@ export const LoginPage = () => {
               type="password"
               id="password"
               name="password"
+              onChange={handleChange}
               placeholder="Ingresa tu contraseña"
               className="w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
