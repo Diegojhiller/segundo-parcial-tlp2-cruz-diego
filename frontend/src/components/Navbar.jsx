@@ -1,11 +1,41 @@
+import { useEffect, useState } from "react";
+
 export const Navbar = () => {
   // TODO: Obtener datos del usuario desde /api/profile
+  const [userName, setUserName] = useState("Usuario");
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const res = await fetch("/api/profile", {
+          credentials: "include",
+        });
+        const data = await res.json();
+        setUserName(data.name);
+      } catch (error) {
+        console.error("Error al obtener usuario:", error);
+      }
+    };
+
+    loadUser();
+  }, []);
+
   // TODO: Implementar función handleLogout con POST a /api/logout usando credentials: 'include'
   // TODO: Después del logout exitoso, redireccionar a /login
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      
+      if (!res.ok) throw new Error("Error en logout");
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
+  
   // TODO: Manejar errores apropiadamente
-
-  const userName = "Usuario"; // TODO: Reemplazar con el nombre real del usuario obtenido de /api/profile
-
   return (
     <nav className="bg-gray-900 text-white h-16 left-0 right-0 shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4 h-full flex items-center justify-between">
@@ -18,9 +48,7 @@ export const Navbar = () => {
           </span>
 
           <button
-            onClick={() => {
-              // TODO: Implementar handleLogout aquí
-            }}
+            onClick={handleLogout}
             className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition-colors font-medium"
           >
             Cerrar Sesión
